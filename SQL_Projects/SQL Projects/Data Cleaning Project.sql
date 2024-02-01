@@ -91,7 +91,7 @@
 	PropertyAddress,
 	SUBSTRING(PropertyAddress, 1, CHARINDEX(',', PropertyAddress)-1) AS Address,
 	SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress)+1, LEN(PropertyAddress)) as City
-	--SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress)+1, LEN(PropertyAddress) - CHARINDEX(',', PropertyAddress)) AS City
+	--SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress)+1, LEN(PropertyAddress) -Â CHARINDEX(',', PropertyAddress)) AS City
 	FROM NashVilleHousing
 
 	*/
@@ -158,11 +158,11 @@
 
 
 	UPDATE 	NashVilleHousing
-	SET SoldAsVacant = CASE 
-							WHEN SoldAsVacant = 'Y' THEN 'Yes'
-							WHEN SoldAsVacant = 'N' THEN 'No'
-							ELSE SoldAsVacant
-						END
+	SET SoldAsVacant = CASE 	
+				WHEN SoldAsVacant = 'Y' THEN 'Yes'
+				WHEN SoldAsVacant = 'N' THEN 'No'
+				ELSE SoldAsVacant
+				END
 
 
 /*
@@ -172,20 +172,10 @@
 
 	WITH ROW_CTE AS  (
 		SELECT
-			*,
-			ROW_NUMBER() OVER 
-				(PARTITION BY ParcelID,
-							  Sale_Date,
-							  LegalReference
-							  ORDER BY
-								UniqueID 
-							) AS RN
+		  *,
+		ROW_NUMBER() OVER (PARTITION BY ParcelID, Sale_Date, LegalReference ORDER BY UniqueID ) AS RN
 		FROM NashVilleHousing)
-
-	DELETE
-
-	FROM ROW_CTE
-	WHERE RN > 1
+		DELETE FROM ROW_CTE WHERE RN > 1
 
 
 
